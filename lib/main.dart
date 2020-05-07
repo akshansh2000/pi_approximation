@@ -110,7 +110,7 @@ class SimulationPainter extends CustomPainter {
       coordinates.add([x, y]);
 
       ++total;
-      if (x * x + y * y < radius * radius) ++insideCircle;
+      if (x * x + y * y <= radius * radius) ++insideCircle;
     }
 
     coordinates.forEach((element) {
