@@ -59,7 +59,7 @@ class _MyAppState extends State<MyApp> {
               ),
               SizedBox(height: 10),
               Text(
-                "${pi.toStringAsFixed(6)}",
+                "${pi.toStringAsFixed(12)}",
                 style: Theme.of(context).textTheme.headline5,
               ),
             ],
@@ -75,11 +75,11 @@ class _MyAppState extends State<MyApp> {
 }
 
 final coordinates = List<List<double>>();
+double insideCircle = 0, total = 0;
 
 class SimulationPainter extends CustomPainter {
   final randomGenerator = math.Random();
   double x, y;
-  int insideCircle = 0, total = 0;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -103,7 +103,7 @@ class SimulationPainter extends CustomPainter {
     );
 
     paint.style = PaintingStyle.fill;
-    for (int i = 0; i < 90; i++) {
+    for (int i = 0; i < 30; i++) {
       x = -radius + randomGenerator.nextDouble() * radius * 2;
       y = -radius + randomGenerator.nextDouble() * radius * 2;
 
