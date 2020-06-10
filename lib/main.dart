@@ -21,7 +21,16 @@ class MyApp extends StatefulWidget {
 
 double pi = 0;
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
+  AnimationController _animationController;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(vsync: this)
+      ..duration = Duration(milliseconds: 400);
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
@@ -40,35 +49,97 @@ class _MyAppState extends State<MyApp> {
     WidgetsBinding.instance
         .addPostFrameCallback((timeStamp) => setState(() {}));
 
-    return Scaffold(
-      backgroundColor: Colors.grey[900],
-      bottomNavigationBar: BottomAppBar(
-        elevation: 0,
-        color: Colors.white,
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 30),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                "Pi Value (approx)",
-                style: Theme.of(context).textTheme.headline4.copyWith(
-                      color: Colors.black,
-                    ),
-              ),
-              SizedBox(height: 10),
-              Text(
-                "${pi.toStringAsFixed(12)}",
-                style: Theme.of(context).textTheme.headline5,
-              ),
-            ],
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.grey[900],
+        bottomNavigationBar: BottomAppBar(
+          elevation: 0,
+          color: Colors.white,
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 50),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  "Pi Value (approx)",
+                  style: Theme.of(context).textTheme.headline4.copyWith(
+                        color: Colors.black,
+                      ),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  "${pi.toStringAsFixed(12)}",
+                  style: Theme.of(context).textTheme.headline5,
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-      body: CustomPaint(
-        painter: SimulationPainter(),
-        child: Container(),
+        body: Stack(
+          children: <Widget>[
+            Align(
+              alignment: Alignment.topCenter,
+              child: Padding(
+                padding: EdgeInsets.only(top: 50),
+                child: Text(
+                  "Darts Inside Circle: ${insideCircle.toInt()}\nDarts Inside Square (Total): ${total.toInt()}",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: CustomPaint(
+                painter: SimulationPainter(),
+                child: Container(),
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 50),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    FloatingActionButton(
+                      child: Icon(Icons.replay),
+                      backgroundColor: Colors.blueAccent[100],
+                      materialTapTargetSize: MaterialTapTargetSize.padded,
+                      onPressed: () => setState(() {
+                        insideCircle = 0;
+                        total = 0;
+                        coordinates.clear();
+                        isWorking = true;
+                        _animationController.reset();
+                      }),
+                    ),
+                    SizedBox(width: 30),
+                    FloatingActionButton(
+                      child: AnimatedIcon(
+                        icon: AnimatedIcons.pause_play,
+                        progress: _animationController,
+                      ),
+                      backgroundColor: Colors.blueAccent[100],
+                      materialTapTargetSize: MaterialTapTargetSize.padded,
+                      onPressed: () => setState(() {
+                        isWorking
+                            ? _animationController.forward()
+                            : _animationController.reverse();
+                        isWorking = !isWorking;
+                      }),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -76,6 +147,7 @@ class _MyAppState extends State<MyApp> {
 
 final coordinates = List<List<double>>();
 double insideCircle = 0, total = 0;
+bool isWorking = true;
 
 class SimulationPainter extends CustomPainter {
   final randomGenerator = math.Random();
@@ -103,15 +175,17 @@ class SimulationPainter extends CustomPainter {
     );
 
     paint.style = PaintingStyle.fill;
-    for (int i = 0; i < 30; i++) {
-      x = -radius + randomGenerator.nextDouble() * radius * 2;
-      y = -radius + randomGenerator.nextDouble() * radius * 2;
 
-      coordinates.add([x, y]);
+    if (isWorking)
+      for (int i = 0; i < 30; i++) {
+        x = -radius + randomGenerator.nextDouble() * radius * 2;
+        y = -radius + randomGenerator.nextDouble() * radius * 2;
 
-      ++total;
-      if (x * x + y * y <= radius * radius) ++insideCircle;
-    }
+        coordinates.add([x, y]);
+
+        ++total;
+        if (x * x + y * y <= radius * radius) ++insideCircle;
+      }
 
     coordinates.forEach((element) {
       x = element[0];
