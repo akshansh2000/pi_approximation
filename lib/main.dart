@@ -109,7 +109,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                   children: <Widget>[
                     FloatingActionButton(
                       child: Icon(Icons.replay),
-                      backgroundColor: Colors.blueAccent[100],
+                      backgroundColor: Colors.blueAccent,
                       materialTapTargetSize: MaterialTapTargetSize.padded,
                       onPressed: () => setState(() {
                         insideCircle = 0;
@@ -125,7 +125,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                         icon: AnimatedIcons.pause_play,
                         progress: _animationController,
                       ),
-                      backgroundColor: Colors.blueAccent[100],
+                      backgroundColor: Colors.blueAccent,
                       materialTapTargetSize: MaterialTapTargetSize.padded,
                       onPressed: () => setState(() {
                         isWorking
