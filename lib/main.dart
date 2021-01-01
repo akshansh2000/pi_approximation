@@ -94,7 +94,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                 child: Text(
                   "Darts Inside Circle: ${insideCircle.toInt()}\n" +
                       "Darts Inside Square (Total): ${total.toInt()}\n" +
-                      "1 / root(total): ${(1 / math.sqrt(total.toInt())).toStringAsFixed(12)}",
+                      "Monte Carlo Error: ${(1 / math.sqrt(total.toInt())).toStringAsFixed(12)}",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
