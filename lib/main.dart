@@ -63,13 +63,22 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
               children: <Widget>[
                 Text(
                   "Pi Value (approx)",
-                  style: Theme.of(context).textTheme.headline4.copyWith(
-                        color: Colors.black,
+                  style: Theme.of(context).textTheme.headline5.copyWith(
+                        fontWeight: FontWeight.bold,
                       ),
                 ),
-                SizedBox(height: 10),
                 Text(
                   "${pi.toStringAsFixed(12)}",
+                  style: Theme.of(context).textTheme.headline5,
+                ),
+                Text(
+                  "Percentage Error (approx)",
+                  style: Theme.of(context).textTheme.headline5.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                Text(
+                  "${((math.pi - pi).abs() / math.pi * 100).toStringAsFixed(12)}",
                   style: Theme.of(context).textTheme.headline5,
                 ),
               ],
@@ -83,7 +92,9 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
               child: Padding(
                 padding: EdgeInsets.only(top: 50),
                 child: Text(
-                  "Darts Inside Circle: ${insideCircle.toInt()}\nDarts Inside Square (Total): ${total.toInt()}",
+                  "Darts Inside Circle: ${insideCircle.toInt()}\n" +
+                      "Darts Inside Square (Total): ${total.toInt()}\n" +
+                      "1 / root(total): ${(1 / math.sqrt(total.toInt())).toStringAsFixed(12)}",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,
