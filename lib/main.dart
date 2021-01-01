@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import 'dart:math' as math;
 
+// starting point for the app
 main() {
   runApp(
     MaterialApp(
@@ -19,10 +20,12 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
+// stores the calculated value of PI
 double pi = 0;
 
+// UI class
 class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
+  AnimationController _animationController; // to control button animations
 
   @override
   void initState() {
@@ -33,6 +36,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    // sets system bar colors
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         statusBarColor: Colors.grey[900],
@@ -42,13 +46,16 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
       ),
     );
 
+    // locks the device to portrait orientation
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
 
+    // continuously redraws the widgets
     WidgetsBinding.instance
         .addPostFrameCallback((timeStamp) => setState(() {}));
 
+    // sets the colors and displays the calculated values
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.grey[900],
@@ -156,16 +163,18 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   }
 }
 
-final coordinates = List<List<double>>();
-double insideCircle = 0, total = 0;
-bool isWorking = true;
+final coordinates = List<List<double>>(); // stores coordinates of all darts
+double insideCircle = 0, total = 0; // counts number of darts
+bool isWorking = true; // remembers the pause/play state
 
+// paints the dots on screen
 class SimulationPainter extends CustomPainter {
-  final randomGenerator = math.Random();
-  double x, y;
+  final randomGenerator = math.Random(); // generates random coordinates
+  double x, y; // stores current coordinates
 
   @override
   void paint(Canvas canvas, Size size) {
+    // paint the square and circle
     final radius = size.width * 9 / 20;
 
     final paint = Paint()
@@ -187,6 +196,7 @@ class SimulationPainter extends CustomPainter {
 
     paint.style = PaintingStyle.fill;
 
+    // increase counters and generate coordinates if pause state is false
     if (isWorking)
       for (int i = 0; i < 30; i++) {
         x = -radius + randomGenerator.nextDouble() * radius * 2;
@@ -198,6 +208,7 @@ class SimulationPainter extends CustomPainter {
         if (x * x + y * y <= radius * radius) ++insideCircle;
       }
 
+    // paint dots at the generated coordinates and update pi value
     coordinates.forEach((element) {
       x = element[0];
       y = element[1];
